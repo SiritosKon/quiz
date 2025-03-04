@@ -1,10 +1,6 @@
 <template>
   <div class="task-container" v-if="task">
-    <!-- Изображение Бродского вверху -->
-    <div class="brodsky-image q-mb-md">
-      <q-img src="/images/brodsky.jpg" alt="И.И. Бродский" class="q-transition animate-fade" />
-    </div>
-
+    <!-- <div class="task-content"> -->
     <!-- Заголовок задания -->
     <h2 class="task-title q-mb-sm q-transition animate-fade text-weight-bold">
       <span>{{ task.title }}</span>
@@ -18,24 +14,24 @@
     <!-- Содержимое задания в зависимости от типа -->
     <div class="task-content q-mb-lg q-transition animate-slide-in-up">
       <!-- Ребус -->
-      <div v-if="task.type === 'puzzle'" class="puzzle-container">
+      <div v-if="task.type === 'puzzle' && task.content.image" class="puzzle-container">
         <q-img :src="task.content.image" alt="Ребус" class="full-width" />
       </div>
 
       <!-- Аудио -->
       <div v-else-if="task.type === 'audio' && task.content.audio" class="audio-container">
-        <audio controls class="full-width">
-          <source :src="task.content.audio" type="audio/mpeg" />
-          Ваш браузер не поддерживает аудио элемент.
-        </audio>
+        <!-- <audio controls class="full-width">
+            <source :src="task.content.audio" type="audio/mpeg" />
+            Ваш браузер не поддерживает аудио элемент.
+          </audio> -->
         <p class="text-caption q-mt-sm">{{ task.content.caption }}</p>
       </div>
 
       <!-- Азбука Морзе -->
       <div v-else-if="task.type === 'morse'" class="morse-container">
         <q-img :src="task.content.image" alt="Азбука Морзе" class="full-width q-mb-md" />
-        <div class="morse-code q-pa-md bg-grey-2 rounded-borders">
-          <p class="text-center">{{ task.content.code }}</p>
+        <div class="morse-code q-py-md bg-grey-2 rounded-borders">
+          <q-img :src="task.content.code" alt="Азбука Морзе" class="full-width" />
         </div>
       </div>
 
@@ -53,40 +49,79 @@
         v-else-if="task.type === 'crossword' && task.content.crossword"
         class="crossword-container"
       >
+        <!-- Подсказки для кроссворда -->
         <div class="crossword-clues q-mb-md">
           <h4>По вертикали:</h4>
           <div
             v-for="clue in task.content.crossword.vertical"
             :key="'v-' + clue.number"
-            class="q-mb-sm"
+            class="q-mb-sm crossword-clue"
           >
-            <span class="text-weight-bold">{{ clue.number }}:</span> {{ clue.clue }}
+            <span class="text-weight-bold">{{ clue.number }}:</span>
+            <div class="crossword-clue-images">
+              <q-img
+                v-for="(img, imgIndex) in clue.clue"
+                :key="'v-' + clue.number + '-' + imgIndex"
+                :src="img.src"
+                :alt="img.alt"
+                class="crossword-clue-image"
+                width="48px"
+                height="48px"
+              />
+            </div>
           </div>
 
           <h4 class="q-mt-md">По горизонтали:</h4>
           <div
             v-for="clue in task.content.crossword.horizontal"
             :key="'h-' + clue.number"
-            class="q-mb-sm"
+            class="q-mb-sm crossword-clue"
           >
-            <span class="text-weight-bold">{{ clue.number }}:</span> {{ clue.clue }}
+            <span class="text-weight-bold">{{ clue.number }}:</span>
+            <div class="crossword-clue-images">
+              <q-img
+                v-for="(img, imgIndex) in clue.clue"
+                :key="'h-' + clue.number + '-' + imgIndex"
+                :src="img.src"
+                :alt="img.alt"
+                class="crossword-clue-image"
+                width="48px"
+                height="48px"
+              />
+            </div>
           </div>
+        </div>
+
+        <!-- Изображение пустого кроссворда -->
+        <div v-if="task.content.crossword.image" class="crossword-image q-mb-md">
+          <q-img
+            :src="task.content.crossword.image"
+            alt="Кроссворд"
+            class="full-width"
+            fit="contain"
+            style="max-height: 400px"
+          />
         </div>
       </div>
 
       <!-- Шифр Цезаря -->
       <div v-else-if="task.type === 'cipher'" class="cipher-container">
         <q-card class="content-card q-mb-md">
-          <q-card-section>
-            <p class="cipher-explanation">{{ task.content.explanation }}</p>
-          </q-card-section>
-        </q-card>
-
-        <q-card class="content-card">
           <q-card-section class="text-center text-weight-bold">
             {{ task.content.cipher }}
           </q-card-section>
         </q-card>
+        <q-expansion-item
+          label="Описание шифра"
+          expand-icon-class="text-grey-8"
+          class="content-card bg-white"
+        >
+          <q-card class="content-card bg-white">
+            <q-card-section>
+              <p>{{ task.content.explanation }}</p>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
       </div>
 
       <!-- Принципы -->
@@ -162,6 +197,7 @@
             header-class="bg-orange-1"
             expand-icon-class="text-grey-8"
             class="content-card"
+            :default-opened="memory.defaultExpanded"
           >
             <q-card class="content-card no-shadow">
               <q-card-section>
@@ -171,6 +207,33 @@
               </q-card-section>
             </q-card>
           </q-expansion-item>
+        </div>
+        <!-- Добавляем карусель с изображениями -->
+        <div v-if="task.images && task.images.length > 0" class="memory-images q-mt-md">
+          <q-carousel
+            v-model="taskStore.currentSlide"
+            transition-prev="slide-right"
+            transition-next="slide-left"
+            swipeable
+            animated
+            control-color="primary"
+            navigation
+            padding
+            arrows
+            height="400px"
+            class="bg-white shadow-1 rounded-borders"
+          >
+            <q-carousel-slide
+              v-for="(image, index) in task.images"
+              :key="index"
+              :name="index"
+              style="padding-left: 16px; padding-right: 16px"
+              class="column no-wrap flex-center"
+            >
+              <q-img :src="image.src" :ratio="16 / 9" fit="contain" style="height: 400px" />
+              <div class="q-mt-md text-center">{{ image.title }}</div>
+            </q-carousel-slide>
+          </q-carousel>
         </div>
       </div>
     </div>
@@ -185,27 +248,48 @@
         @click="taskStore.showHint = !taskStore.showHint"
       />
       <q-slide-transition>
-        <div v-show="taskStore.showHint" class="bg-blue-1 rounded-borders q-pa-md q-mt-sm">
-          {{ task.content.hint }}
+        <div v-show="taskStore.showHint" class="bg-orange-1 rounded-borders q-pa-md q-mt-sm">
+          <p>{{ task.content.hint }}</p>
+          <q-img
+            v-if="task.content.hintImage"
+            :src="task.content.hintImage"
+            class="full-width q-mt-md"
+            fit="contain"
+            style="max-height: 300px"
+          />
         </div>
       </q-slide-transition>
     </div>
-
-    <!-- Кнопка ответа -->
+    <!-- </div> -->
+    <!-- Общий блок ответа -->
     <div v-if="task.answer" class="answer-container q-mb-md">
       <q-btn
         label="Ответ"
         color="primary"
         outline
-        class="full-width"
+        class="full-width text-weight-medium"
         @click="taskStore.showAnswerLocal = !taskStore.showAnswerLocal"
       />
       <q-slide-transition>
         <div v-show="taskStore.showAnswerLocal" class="bg-blue-1 rounded-borders q-pa-md q-mt-sm">
-          {{ task.answer }}
+          <div class="text-weight-medium">{{ task.answer }}</div>
+
+          <!-- Изображение решенного кроссворда -->
+          <div
+            v-if="task.type === 'crossword' && task.content.crossword?.solvedImage"
+            class="solved-crossword q-mt-md"
+          >
+            <q-img
+              :src="task.content.crossword.solvedImage"
+              alt="Решенный кроссворд"
+              class="full-width"
+              fit="contain"
+              style="max-height: 400px"
+            />
+          </div>
 
           <!-- Изображения в ответе (если есть) -->
-          <div v-if="task.images && task.images.length > 0" class="answer-images">
+          <div v-else-if="task.images && task.images.length > 0" class="answer-images">
             <q-carousel
               v-model="taskStore.currentSlide"
               transition-prev="slide-right"
@@ -216,16 +300,17 @@
               navigation
               padding
               arrows
-              height="300px"
+              height="400px"
               class="bg-white shadow-1 rounded-borders"
             >
               <q-carousel-slide
                 v-for="(image, index) in task.images"
                 :key="index"
                 :name="index"
+                style="padding-left: 16px; padding-right: 16px"
                 class="column no-wrap flex-center"
               >
-                <q-img :src="image.src" :ratio="16 / 9" />
+                <q-img :src="image.src" :ratio="16 / 9" fit="contain" style="height: 400px" />
                 <div class="q-mt-md text-center">{{ image.title }}</div>
               </q-carousel-slide>
             </q-carousel>
@@ -289,7 +374,7 @@ function selectPrinciple(text: string, verdict: boolean) {
 <style lang="scss" scoped>
 .task-container {
   max-width: 600px;
-  margin: 0 auto;
+
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -378,5 +463,43 @@ function selectPrinciple(text: string, verdict: boolean) {
 .memory-card {
   transition: box-shadow 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.crossword-container {
+  .crossword-image,
+  .solved-crossword {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .crossword-clues {
+    background: #fff;
+    padding: 16px;
+    border-radius: 8px;
+
+    h4 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #795548;
+    }
+  }
+
+  .crossword-clue {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .crossword-clue-images {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .crossword-clue-image {
+      border-radius: 4px;
+      overflow: hidden;
+    }
+  }
 }
 </style>

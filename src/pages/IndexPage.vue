@@ -1,9 +1,14 @@
 <template>
   <q-page class="flex flex-col q-pa-md">
     <!-- Изображение Бродского вверху -->
-    <div class="brodsky-image q-mb-md">
-      <q-img src="/images/brodsky.jpg" alt="И.И. Бродский" class="q-transition animate-fade" />
-    </div>
+
+    <q-img
+      :src="'/images/brodsky.png'"
+      alt="И.И. Бродский"
+      class="q-transition animate-fade"
+      style="height: 250px; width: 100%"
+      fit="contain"
+    />
 
     <!-- Основной контент -->
     <task-component />
@@ -27,5 +32,10 @@ import ProgressButtons from 'components/ProgressButtons.vue'
 
 .flex-grow-1 {
   flex-grow: 1;
+}
+
+.brodsky-image {
+  height: 150px;
+  width: 100%;
 }
 </style>

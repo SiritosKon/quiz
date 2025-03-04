@@ -53,3 +53,19 @@ function prevTask() {
   taskStore.resetLocalState()
 }
 </script>
+
+<style scoped>
+.navigation-container {
+  position: sticky;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  padding: 0 16px;
+  background: #f8f8f8;
+  z-index: 1000;
+}
+
+.navigation-buttons {
+  margin-bottom: 16px;
+}
+</style>
