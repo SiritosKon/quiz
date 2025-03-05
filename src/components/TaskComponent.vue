@@ -17,7 +17,9 @@
       class="congratulations-container q-pa-md q-mb-lg rounded-borders text-center"
     >
       <p class="q-mb-lg">
-        Пожалуйста, поделитесь своим мнением, пройдя небольшой опрос по ссылке ниже:
+        <b>Дорогие посетители!</b>
+        <br />Просим вас принять участие в опросе по ссылки ниже с целью улучшения качества
+        интерактивного занятия.
       </p>
       <q-btn
         color="orange"
@@ -73,7 +75,7 @@
       >
         <!-- Подсказки для кроссворда -->
         <div class="crossword-clues q-mb-md">
-          <h4>По вертикали:</h4>
+          <h6>По вертикали:</h6>
           <div
             v-for="clue in task.content.crossword.vertical"
             :key="'v-' + clue.number"
@@ -87,13 +89,13 @@
                 :src="img.src"
                 :alt="img.alt"
                 class="crossword-clue-image"
-                width="48px"
-                height="48px"
+                width="36px"
+                height="36px"
               />
             </div>
           </div>
 
-          <h4 class="q-mt-md">По горизонтали:</h4>
+          <h6 class="q-mt-md">По горизонтали:</h6>
           <div
             v-for="clue in task.content.crossword.horizontal"
             :key="'h-' + clue.number"
@@ -107,8 +109,8 @@
                 :src="img.src"
                 :alt="img.alt"
                 class="crossword-clue-image"
-                width="48px"
-                height="48px"
+                width="36px"
+                height="36px"
               />
             </div>
           </div>
@@ -277,7 +279,11 @@
 
     <!-- Подсказка (если есть) -->
     <div
-      v-if="task.content && task.content.hint && task.type !== 'congratulation'"
+      v-if="
+        task.content &&
+        (task.content.hint || task.content.hintImage) &&
+        task.type !== 'congratulation'
+      "
       class="hint-container q-mb-md"
     >
       <q-btn
@@ -288,12 +294,12 @@
         @click="taskStore.showHint = !taskStore.showHint"
       />
       <q-slide-transition>
-        <div v-show="taskStore.showHint" class="bg-orange-1 rounded-borders q-pa-md q-mt-sm">
-          <p>{{ task.content.hint }}</p>
+        <div v-show="taskStore.showHint" class="bg-orange-1 rounded-borders q-pa-md q-mt-none">
+          <!-- <p>{{ task.content.hint }}</p> -->
           <q-img
             v-if="task.content.hintImage"
             :src="task.content.hintImage"
-            class="full-width q-mt-md"
+            class="full-width"
             fit="contain"
             style="max-height: 300px"
           />
@@ -506,7 +512,7 @@ function selectPrinciple(text: string, verdict: boolean) {
     padding: 16px;
     border-radius: 8px;
 
-    h4 {
+    h6 {
       margin-top: 0;
       margin-bottom: 12px;
       color: #795548;

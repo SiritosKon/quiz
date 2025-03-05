@@ -161,7 +161,7 @@ export const useTaskStore = defineStore('tasks', () => {
       content: {
         memory:
           'Настроение у меня было мрачное, мною овладел какой-то безотчетный страх смерти. С этим подавлявшим меня чувством я стал бороться и искать выхода в своем творчестве.',
-        hint: 'Подумайте о безопасности художественных работ на выставках.',
+        hint: '',
         hintImage: '/quiz/images/hintImage.avif',
       },
       answer:
@@ -347,8 +347,8 @@ export const useTaskStore = defineStore('tasks', () => {
 
     {
       id: 14,
-      title: 'Поздравляем!',
-      description: 'Вы успешно прошли все задания квиза! Благодарим за участие!',
+      title: '',
+      description: '',
       type: 'congratulation',
       content: {
         image: '', // Можно добавить изображение, если нужно

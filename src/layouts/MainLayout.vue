@@ -1,9 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header class="bg-orange-8">
-      <q-toolbar>
-        <q-toolbar-title class="text-center"> Исаак Бродский </q-toolbar-title>
-      </q-toolbar>
+      <q-toolbar> </q-toolbar>
     </q-header>
 
     <q-page-container>

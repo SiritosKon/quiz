@@ -1,8 +1,8 @@
 {
   "name": "brodsky-quiz",
   "version": "0.0.1",
-  "description": "Квиз, посвященный И.И. Бродскому",
-  "productName": "Квиз И.И. Бродский",
+  "description": "И.И. Бродскому",
+  "productName": "И.И. Бродский",
   "author": "n.konik <n.konik@samolet.ru>",
   "type": "module",
   "private": true,
