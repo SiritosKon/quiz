@@ -11,8 +11,30 @@
       {{ task.description }}
     </p>
 
+    <!-- Поздравление и опрос для типа congratulation -->
+    <div
+      v-if="task.type === 'congratulation'"
+      class="congratulations-container q-pa-md q-mb-lg rounded-borders text-center"
+    >
+      <p class="q-mb-lg">
+        Пожалуйста, поделитесь своим мнением, пройдя небольшой опрос по ссылке ниже:
+      </p>
+      <q-btn
+        color="orange"
+        label="Пройти опрос"
+        icon="poll"
+        size="lg"
+        target="_blank"
+        href="https://forms.gle/vcJsyD8CLUSVp4xH6"
+        class="q-py-sm"
+      />
+    </div>
+
     <!-- Содержимое задания в зависимости от типа -->
-    <div class="task-content q-mb-lg q-transition animate-slide-in-up">
+    <div
+      v-if="task.type !== 'congratulation'"
+      class="task-content q-mb-lg q-transition animate-slide-in-up"
+    >
       <!-- Ребус -->
       <div v-if="task.type === 'puzzle' && task.content.image" class="puzzle-container">
         <q-img :src="task.content.image" alt="Ребус" class="full-width" />
@@ -129,62 +151,77 @@
         v-else-if="task.type === 'principles' && task.content.principles"
         class="principles-container"
       >
-        <div class="principles-table q-mb-md">
-          <q-card class="content-card">
-            <q-table
-              :rows="task.content.principles"
-              :columns="[
-                { name: 'principle', label: 'Принцип', field: 'text', align: 'left' },
-                { name: 'verdict', label: 'Вердикт', field: 'verdict', align: 'center' },
-              ]"
-              row-key="text"
-              hide-pagination
-              hide-header
-              flat
-              bordered
-            >
-              <template v-slot:body="props">
-                <q-tr :props="props">
-                  <q-td :props="props" key="principle">
-                    {{ props.row.text }}
-                  </q-td>
-                  <q-td :props="props" key="verdict" class="text-center">
-                    <q-btn-group>
-                      <q-btn
-                        label="Верно"
-                        color="positive"
-                        :outline="
-                          !taskStore.selectedPrinciples[props.row.text] ||
-                          taskStore.selectedPrinciples[props.row.text] !== true
-                        "
-                        @click="selectPrinciple(props.row.text, true)"
-                        :disable="taskStore.principleChecked[props.row.text]"
-                        :class="{
-                          'bg-green-1':
-                            taskStore.principleChecked[props.row.text] &&
-                            props.row.correct === true,
-                        }"
-                      />
-                      <q-btn
-                        label="Неверно"
-                        color="negative"
-                        :outline="
-                          !taskStore.selectedPrinciples[props.row.text] ||
-                          taskStore.selectedPrinciples[props.row.text] !== false
-                        "
-                        @click="selectPrinciple(props.row.text, false)"
-                        :disable="taskStore.principleChecked[props.row.text]"
-                        :class="{
-                          'bg-red-1':
-                            taskStore.principleChecked[props.row.text] &&
-                            props.row.correct === false,
-                        }"
-                      />
-                    </q-btn-group>
-                  </q-td>
-                </q-tr>
-              </template>
-            </q-table>
+        <!-- Карточки принципов -->
+        <div class="principles-cards">
+          <q-card
+            v-for="(principle, index) in task.content.principles"
+            :key="index"
+            class="principle-card q-mb-sm"
+            :class="{
+              'principle-selected': taskStore.principleChecked[principle.text],
+              'principle-correct':
+                taskStore.principleChecked[principle.text] &&
+                taskStore.selectedPrinciples[principle.text] === principle.correct,
+              'principle-incorrect':
+                taskStore.principleChecked[principle.text] &&
+                taskStore.selectedPrinciples[principle.text] !== principle.correct,
+            }"
+          >
+            <q-card-section>
+              <div class="row justify-between items-start">
+                <div class="col principle-text">{{ principle.text }}</div>
+                <div
+                  v-if="taskStore.principleChecked[principle.text]"
+                  class="q-ml-sm principle-icon"
+                >
+                  <q-icon
+                    :name="
+                      taskStore.selectedPrinciples[principle.text] === principle.correct
+                        ? 'check_circle'
+                        : 'cancel'
+                    "
+                    :class="
+                      taskStore.selectedPrinciples[principle.text] === principle.correct
+                        ? 'text-positive'
+                        : 'text-negative'
+                    "
+                    size="24px"
+                  />
+                </div>
+              </div>
+              <div class="principle-actions row justify-end q-gutter-sm q-mt-sm">
+                <q-btn
+                  label="Верно"
+                  color="positive"
+                  :outline="
+                    !taskStore.selectedPrinciples[principle.text] ||
+                    taskStore.selectedPrinciples[principle.text] !== true
+                  "
+                  @click="selectPrinciple(principle.text, true)"
+                  :disable="taskStore.principleChecked[principle.text]"
+                  :class="{
+                    'opacity-0':
+                      taskStore.principleChecked[principle.text] &&
+                      taskStore.selectedPrinciples[principle.text] === false,
+                  }"
+                />
+                <q-btn
+                  label="Неверно"
+                  color="negative"
+                  :outline="
+                    !taskStore.selectedPrinciples[principle.text] ||
+                    taskStore.selectedPrinciples[principle.text] !== false
+                  "
+                  @click="selectPrinciple(principle.text, false)"
+                  :disable="taskStore.principleChecked[principle.text]"
+                  :class="{
+                    'opacity-0':
+                      taskStore.principleChecked[principle.text] &&
+                      taskStore.selectedPrinciples[principle.text] === true,
+                  }"
+                />
+              </div>
+            </q-card-section>
           </q-card>
         </div>
       </div>
@@ -239,7 +276,10 @@
     </div>
 
     <!-- Подсказка (если есть) -->
-    <div v-if="task.content && task.content.hint" class="hint-container q-mb-md">
+    <div
+      v-if="task.content && task.content.hint && task.type !== 'congratulation'"
+      class="hint-container q-mb-md"
+    >
       <q-btn
         label="Подсказка"
         color="warning"
@@ -262,7 +302,10 @@
     </div>
     <!-- </div> -->
     <!-- Общий блок ответа -->
-    <div v-if="task.answer" class="answer-container q-mb-md">
+    <div
+      v-if="task.answer && task.type !== 'principles' && task.type !== 'congratulation'"
+      class="answer-container q-mb-md"
+    >
       <q-btn
         label="Ответ"
         color="primary"
@@ -320,7 +363,7 @@
     </div>
 
     <!-- Воспоминание (если есть) -->
-    <div v-if="task.memory" class="memory-container q-mb-md">
+    <div v-if="task.memory && task.type !== 'congratulation'" class="memory-container q-mb-md">
       <q-expansion-item
         label="Воспоминание"
         header-class="bg-orange-1"
@@ -349,25 +392,10 @@ const taskStore = useTaskStore()
 // Вычисляемые свойства
 const task = computed(() => taskStore.currentTask)
 
-// Определение интерфейса для принципа
-interface Principle {
-  text: string
-  correct: boolean
-}
-
+// Обновленная функция для выбора принципа
 function selectPrinciple(text: string, verdict: boolean) {
   taskStore.selectedPrinciples[text] = verdict
-
-  // Проверяем, что task.value и task.value.content.principles не undefined
-  if (task.value && task.value.content.principles) {
-    // Находим принцип в списке
-    const principle = task.value.content.principles.find((p: Principle) => p.text === text)
-
-    // Проверяем правильность ответа
-    if (principle) {
-      taskStore.principleChecked[text] = true
-    }
-  }
+  taskStore.principleChecked[text] = true
 }
 </script>
 
@@ -500,6 +528,71 @@ function selectPrinciple(text: string, verdict: boolean) {
       border-radius: 4px;
       overflow: hidden;
     }
+  }
+}
+
+.principles-container {
+  .principle-card {
+    background: white;
+    transition: all 0.3s ease;
+    border-left: 4px solid #eeeeee; // Серая полоска слева по умолчанию
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+
+    &.principle-correct {
+      border-left: 4px solid #21ba45; // Зеленая полоска для правильных ответов
+    }
+
+    &.principle-incorrect {
+      border-left: 4px solid #c10015; // Красная полоска для неправильных ответов
+    }
+  }
+
+  .principle-text {
+    line-height: 1.5;
+  }
+
+  .principle-icon {
+    transition: all 0.3s ease;
+  }
+
+  .opacity-0 {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.congratulations-container {
+  animation: fadeIn 0.8s;
+
+  h3 {
+    color: #2e7d32;
+    font-size: 1.8rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 </style>

@@ -24,11 +24,11 @@
       />
 
       <q-btn
-        label="Далее"
+        v-if="currentTaskIndex !== tasks.length - 1"
+        :label="isBeforeLastStep ? 'Закончить' : 'Далее'"
         color="primary"
         class="col"
         @click="nextTask"
-        :disable="currentTaskIndex === tasks.length - 1"
       />
     </div>
   </div>
@@ -41,6 +41,11 @@ const taskStore = useTaskStore()
 
 const currentTaskIndex = computed(() => taskStore.currentTaskIndex)
 const tasks = computed(() => taskStore.tasks)
+
+// Проверка, находится ли пользователь на предпоследнем шаге
+const isBeforeLastStep = computed(() => {
+  return currentTaskIndex.value === tasks.value.length - 2
+})
 
 // Методы
 function nextTask() {

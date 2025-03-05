@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 
 // Типы для заданий
 export interface TaskContent {
@@ -31,7 +31,16 @@ export interface Task {
   id: number
   title: string
   description: string
-  type: 'puzzle' | 'audio' | 'morse' | 'riddle' | 'crossword' | 'cipher' | 'principles' | 'memory'
+  type:
+    | 'puzzle'
+    | 'audio'
+    | 'morse'
+    | 'riddle'
+    | 'crossword'
+    | 'cipher'
+    | 'principles'
+    | 'memory'
+    | 'congratulation'
   content: TaskContent
   answer?: string
   memory?: string
@@ -52,11 +61,11 @@ export const useTaskStore = defineStore('tasks', () => {
   const showAnswer = ref(false)
 
   // Локальное состояние задания
+  const currentSlide = ref(0)
+  const selectedPrinciples = reactive<Record<string, boolean>>({})
+  const principleChecked = reactive<Record<string, boolean>>({})
   const showHint = ref(false)
   const showAnswerLocal = ref(false)
-  const currentSlide = ref(0)
-  const selectedPrinciples = ref<Record<string, boolean>>({})
-  const principleChecked = ref<Record<string, boolean>>({})
 
   // Список всех заданий
   const tasks = ref<Task[]>([
@@ -248,7 +257,7 @@ export const useTaskStore = defineStore('tasks', () => {
           title: 'И.И.Бродский «Портрет Максима Горького»',
         },
         {
-          src: '/images/gorky2.jpg',
+          src: '/images/gorky2.png',
           title: 'И.И. Бродский «А.М. Горький-буревестник»',
         },
       ],
@@ -276,10 +285,12 @@ export const useTaskStore = defineStore('tasks', () => {
           {
             title: 'Рекомендательное письмо А. В. Луначарского к В. И. Ленину',
             text: 'Дорогой Владимир Ильич! Податель сего, художник Бродский, один из талантливейших артистов кисти нашего времени, хочет сделать с Вас портрет. Я полагаю, что желание его должно быть удовлетворено. Вряд ли кто-нибудь другой может передать для истории со всей желательной полнотой и яркостью Вас, как лицо, принадлежавшее отныне не себе, а человечеству. С точки зрения этической и политической художник Бродский заслуживает полного доверия.',
+            defaultExpanded: true,
           },
           {
             title: 'Воспоминание о встрече с В.И. Лениным',
             text: 'Пристально всмотревшись в карандашный набросок, Владимир Ильич ответил мне, что он не похож на себя. Окружающие стали убеждать Владимира Ильича в том, что он очень похож, что он совершенно не знает своего лица в профиль и что портрет, без сомнения, удачен. Владимир Ильич усмехнулся и принялся подписывать рисунок. — Первый раз в жизни подписываюсь под тем, с чем не согласен!— сказал он с улыбкой, передавая мне обратно набросок. Но через несколько минут, когда рисунок пошел по рукам и большинство сказало, что сходство уловлено большое, Владимир Ильич, снова посмотрев, промолвил: «А ведь, кажется, действительно похож».',
+            defaultExpanded: true,
           },
         ],
       },
@@ -304,9 +315,24 @@ export const useTaskStore = defineStore('tasks', () => {
             text: 'Учить живописи нельзя — можно только помочь выучиться, передавая студенту свой опыт, накопленный на протяжении личной долголетней практики как художника.',
             correct: true,
           },
+          {
+            text: 'Советовать ученику можно всё, а не только то, во что сам твердо веришь, что сам хорошо усвоил.',
+            correct: false,
+          },
+          {
+            text: 'Работа ученика должна быть быстрой, а не длительной.',
+            correct: false,
+          },
+          {
+            text: 'Мастерство завоевывается терпеливым, упорным трудом.',
+            correct: true,
+          },
         ],
       },
+      answer:
+        'Верные принципы И.И.Бродского: "Весьма важно рисование по памяти, быстрые наброски в альбом", "Учить живописи нельзя — можно только помочь выучиться, передавая студенту свой опыт", "Мастерство завоевывается терпеливым, упорным трудом". Неверные принципы: "Ученику не стоит говорить о том, как сам учился...", "Советовать ученику можно всё...", "Работа ученика должна быть быстрой..."',
     },
+
     {
       id: 13,
       title: 'Задание 11',
@@ -314,9 +340,19 @@ export const useTaskStore = defineStore('tasks', () => {
         'Необходимо решить ребус, чтобы узнать, в каком году умер И.И.Бродский. Каждый музейный экспонат - определенное зашифрованное число. Решив уравнения и разгадав все числа, можно узнать две последние цифры года смерти художника.',
       type: 'puzzle',
       content: {
-        image: '/images/puzzle3.jpg',
+        image: '/images/puzzle3.jpeg',
       },
       answer: '1939 год',
+    },
+
+    {
+      id: 14,
+      title: 'Поздравляем!',
+      description: 'Вы успешно прошли все задания квиза! Благодарим за участие!',
+      type: 'congratulation',
+      content: {
+        image: '', // Можно добавить изображение, если нужно
+      },
     },
   ])
 
@@ -328,8 +364,15 @@ export const useTaskStore = defineStore('tasks', () => {
     showHint.value = false
     showAnswerLocal.value = false
     currentSlide.value = 0
-    selectedPrinciples.value = {}
-    principleChecked.value = {}
+
+    // Очищаем объекты, используя Object.keys для изменения содержимого, а не самих переменных
+    Object.keys(selectedPrinciples).forEach((key) => {
+      delete selectedPrinciples[key]
+    })
+
+    Object.keys(principleChecked).forEach((key) => {
+      delete principleChecked[key]
+    })
   }
 
   // Функция для перехода к следующему заданию
@@ -391,6 +434,12 @@ export const useTaskStore = defineStore('tasks', () => {
     }
   }
 
+  function isPrincipleCorrect(text: string): boolean | null {
+    // Ищем принцип в текущем задании
+    const principle = currentTask.value?.content.principles?.find((p) => p.text === text)
+    return principle ? principle.correct : null
+  }
+
   // Загружаем прогресс при инициализации хранилища
   loadProgress()
 
@@ -411,5 +460,6 @@ export const useTaskStore = defineStore('tasks', () => {
     resetLocalState,
     saveProgress,
     loadProgress,
+    isPrincipleCorrect,
   }
 })
