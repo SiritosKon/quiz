@@ -76,7 +76,7 @@ export const useTaskStore = defineStore('tasks', () => {
         'Необходимо решить ребус, чтобы узнать, в каком году родился И.И.Бродский. Каждый музейный экспонат - определенное зашифрованное число. Решив уравнения и разгадав все числа, можно узнать две последние цифры года рождения художника.',
       type: 'puzzle',
       content: {
-        image: '/images/puzzle1.jpeg',
+        image: '/quiz/images/puzzle1.jpeg',
       },
       answer: '1884 год',
       memory:
@@ -89,7 +89,7 @@ export const useTaskStore = defineStore('tasks', () => {
         'Попробуем ощутить себя И.И.Бродским. Необходимо прослушать часть произведения Ференца Листа и поразмышлять, как данный фрагмент мог повлиять на творчество художника.',
       type: 'audio',
       content: {
-        audio: '/audio/list_rhapsody12.mp3',
+        audio: '/quiz/audio/list_rhapsody12.mp3',
         caption: 'Ф. Лист, Рапсодия №12. Исполняет Владимир Иванов.',
       },
       answer: '',
@@ -101,15 +101,15 @@ export const useTaskStore = defineStore('tasks', () => {
         'Для того, чтобы узнать фамилию художника, в галерее которого побывал И.И.Бродский, необходимо разгадать шифр. Перед вами картинка, на которой представлена расшифровка каждой буквы русского алфавита в соответствии с Азбукой Морзе. Необходимо разгадать шифр, опираясь на данную иллюстрацию.',
       type: 'morse',
       content: {
-        image: '/images/morse.jpg',
-        code: '/images/morse_input.png',
+        image: '/quiz/images/morse.jpg',
+        code: '/quiz/images/morse_input.png',
       },
       answer: 'Иван Константинович Айвазовский',
       memory:
         'Меня, как будущего художника сразу же повели в галерею Айвазовского. Помню, с каким большим волнением подходил я к зданию галереи и с каким вдохновенным трепетом осматривал, впервые в жизни, настоящие картины. Уже уходя из большого зала, я увидел небольшую полуоткрытую дверь, за которую решил заглянуть, в надежде, что и там висят такие же замечательные картины. Дверь вела в небольшую светлую комнату, в которой я увидел мольберт и на нем картину, очевидно, только недавно начатую. Рядом, на табурете, лежали палитра и кисти, на них были еще свежие краски. Я посмотрел на эти диковинные вещи и быстро вышел. То была мастерская самого Айвазовского, художника, сотворившего столько чудесных полотен, казавшихся мне тогда пределом живописного мастерства. Увидев воочию мастерскую художника, я еще больше преисполнился благоговением перед искусством этого великого мастера и весь день чувствовал себя счастливцем.',
       images: [
         {
-          src: '/images/aivazovsky.png',
+          src: '/quiz/images/aivazovsky.png',
           title: 'И.К.Айвазовский "Девятый вал"',
         },
       ],
@@ -132,22 +132,22 @@ export const useTaskStore = defineStore('tasks', () => {
       description: 'Решив ребус, можно узнать, к кому же так мечтал попасть учиться И.И.Бродский.',
       type: 'puzzle',
       content: {
-        image: '/images/puzzle2.jpeg',
+        image: '/quiz/images/puzzle2.jpeg',
       },
       answer: 'Илья Ефимович Репин',
       memory:
         'Я несколько дней ходил на квартиру к Репину, просил его принять меня к себе, но он все время отказывал, ссылаясь на тесноту в мастерской. Тогда я попросил устроить меня где-нибудь, в любом уголке. Он мне ответил: «Если вы можете работать при таких условиях, то начинайте».',
       images: [
         {
-          src: '/images/repin1.png',
+          src: '/quiz/images/repin1.png',
           title: 'И.Е.Репин "Иван Грозный и сын его Иван 16 ноября 1581 года"',
         },
         {
-          src: '/images/repin2.png',
+          src: '/quiz/images/repin2.png',
           title: 'И.Е.Репин "Запорожцы пишут письмо турецкому султану"',
         },
         {
-          src: '/images/repin3.png',
+          src: '/quiz/images/repin3.png',
           title: 'И.Е.Репин "Бурлаки на Волге"',
         },
       ],
@@ -162,7 +162,7 @@ export const useTaskStore = defineStore('tasks', () => {
         memory:
           'Настроение у меня было мрачное, мною овладел какой-то безотчетный страх смерти. С этим подавлявшим меня чувством я стал бороться и искать выхода в своем творчестве.',
         hint: 'Подумайте о безопасности художественных работ на выставках.',
-        hintImage: '/images/hintImage.avif',
+        hintImage: '/quiz/images/hintImage.avif',
       },
       answer:
         'Эскиз был украден с академической выставки. Дальнейшая судьба этой работы неизвестна.',
@@ -179,16 +179,16 @@ export const useTaskStore = defineStore('tasks', () => {
             {
               number: 2,
               clue: [
-                { src: '/images/crossword/austria1.jpg', alt: 'Скрипка' },
-                { src: '/images/crossword/austria2.jpg', alt: 'Кофе' },
+                { src: '/quiz/images/crossword/austria1.jpg', alt: 'Скрипка' },
+                { src: '/quiz/images/crossword/austria2.jpg', alt: 'Кофе' },
               ],
               answer: 'Австрия',
             },
             {
               number: 3,
               clue: [
-                { src: '/images/crossword/spain1.jpg', alt: 'Танцы' },
-                { src: '/images/crossword/spain2.png', alt: 'Паэлья' },
+                { src: '/quiz/images/crossword/spain1.jpg', alt: 'Танцы' },
+                { src: '/quiz/images/crossword/spain2.png', alt: 'Паэлья' },
               ],
               answer: 'Испания',
             },
@@ -197,32 +197,32 @@ export const useTaskStore = defineStore('tasks', () => {
             {
               number: 1,
               clue: [
-                { src: '/images/crossword/france1.jpg', alt: 'Багет' },
-                { src: '/images/crossword/france3.png', alt: 'Художник' },
-                { src: '/images/crossword/france2.jpg', alt: 'Петух' },
+                { src: '/quiz/images/crossword/france1.jpg', alt: 'Багет' },
+                { src: '/quiz/images/crossword/france3.png', alt: 'Художник' },
+                { src: '/quiz/images/crossword/france2.jpg', alt: 'Петух' },
               ],
               answer: 'Франция',
             },
             {
               number: 4,
               clue: [
-                { src: '/images/crossword/germany1.jpg', alt: 'Пиво' },
-                { src: '/images/crossword/germany2.jpg', alt: 'Праздник' },
+                { src: '/quiz/images/crossword/germany1.jpg', alt: 'Пиво' },
+                { src: '/quiz/images/crossword/germany2.jpg', alt: 'Праздник' },
               ],
               answer: 'Германия',
             },
             {
               number: 5,
               clue: [
-                { src: '/images/crossword/england1.jpg', alt: 'Чай' },
-                { src: '/images/crossword/england2.jpg', alt: 'Автобус' },
-                { src: '/images/crossword/england3.jpg', alt: 'Суп' },
+                { src: '/quiz/images/crossword/england1.jpg', alt: 'Чай' },
+                { src: '/quiz/images/crossword/england2.jpg', alt: 'Автобус' },
+                { src: '/quiz/images/crossword/england3.jpg', alt: 'Суп' },
               ],
               answer: 'Англия',
             },
           ],
-          image: '/images/cross.jpg',
-          solvedImage: '/images/cross_fill.jpg',
+          image: '/quiz/images/cross.jpg',
+          solvedImage: '/quiz/images/cross_fill.jpg',
         },
       },
       answer: 'Франция, Австрия, Испания, Германия, Англия',
@@ -234,7 +234,7 @@ export const useTaskStore = defineStore('tasks', () => {
         'Давайте с вами узнаем имена художников, с произведениями которых познакомился И.И. Бродский в заграничной поездке, а также посмотрим на их знаменитые полотна.',
       type: 'puzzle',
       content: {
-        image: '/images/artists.png',
+        image: '/quiz/images/artists.png',
       },
     },
     {
@@ -253,11 +253,11 @@ export const useTaskStore = defineStore('tasks', () => {
       },
       images: [
         {
-          src: '/images/gorky1.jpg',
+          src: '/quiz/images/gorky1.jpg',
           title: 'И.И.Бродский «Портрет Максима Горького»',
         },
         {
-          src: '/images/gorky2.png',
+          src: '/quiz/images/gorky2.png',
           title: 'И.И. Бродский «А.М. Горький-буревестник»',
         },
       ],
@@ -340,7 +340,7 @@ export const useTaskStore = defineStore('tasks', () => {
         'Необходимо решить ребус, чтобы узнать, в каком году умер И.И.Бродский. Каждый музейный экспонат - определенное зашифрованное число. Решив уравнения и разгадав все числа, можно узнать две последние цифры года смерти художника.',
       type: 'puzzle',
       content: {
-        image: '/images/puzzle3.jpeg',
+        image: '/quiz/images/puzzle3.jpeg',
       },
       answer: '1939 год',
     },

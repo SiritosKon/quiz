@@ -1,8 +1,8 @@
 {
-  "name": "hisoty-quiz",
+  "name": "brodsky-quiz",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Quasar App",
+  "description": "Квиз, посвященный И.И. Бродскому",
+  "productName": "Квиз И.И. Бродский",
   "author": "n.konik <n.konik@samolet.ru>",
   "type": "module",
   "private": true,

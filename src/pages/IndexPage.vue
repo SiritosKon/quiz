@@ -3,7 +3,7 @@
     <!-- Изображение Бродского вверху -->
 
     <q-img
-      :src="'/images/brodsky.png'"
+      src="/quiz/images/brodsky.png"
       alt="И.И. Бродский"
       class="q-transition animate-fade"
       style="height: 250px; width: 100%"
