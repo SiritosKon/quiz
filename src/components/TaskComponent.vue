@@ -288,13 +288,13 @@
     >
       <q-btn
         label="Подсказка"
-        color="warning"
+        color="primary"
         outline
         class="full-width"
         @click="taskStore.showHint = !taskStore.showHint"
       />
       <q-slide-transition>
-        <div v-show="taskStore.showHint" class="bg-orange-1 rounded-borders q-pa-md q-mt-none">
+        <div v-show="taskStore.showHint" class="bg-blue-1 rounded-borders q-pa-md q-mt-none">
           <!-- <p>{{ task.content.hint }}</p> -->
           <q-img
             v-if="task.content.hintImage"
